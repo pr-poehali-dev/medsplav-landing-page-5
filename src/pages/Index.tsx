@@ -1,8 +1,54 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import Icon from "@/components/ui/icon";
+import { useState } from "react";
 
 const Index = () => {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    company: "",
+    message: ""
+  });
+
+  const galleryImages = [
+    {
+      url: "https://cdn.poehali.dev/projects/cd9d576c-b48d-4619-952c-6c0bbf28698c/files/4ee50261-7a3a-4cc5-a7db-a05d2ac19c58.jpg",
+      title: "Медицинские стенты",
+      category: "Медицина"
+    },
+    {
+      url: "https://cdn.poehali.dev/projects/cd9d576c-b48d-4619-952c-6c0bbf28698c/files/b6b95666-ad0b-4202-ac61-ddb2c5ce2915.jpg",
+      title: "Производственный комплекс",
+      category: "Производство"
+    },
+    {
+      url: "https://cdn.poehali.dev/projects/cd9d576c-b48d-4619-952c-6c0bbf28698c/files/83d5884b-22d7-4d68-aaca-335fa81e9574.jpg",
+      title: "Проволока с памятью формы",
+      category: "Продукция"
+    }
+  ];
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Form submitted:", formData);
+    alert("Спасибо! Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.");
+    setFormData({ name: "", email: "", phone: "", company: "", message: "" });
+  };
+
+  const properties = [
+    { name: "Температурный диапазон", value: 85, color: "bg-primary" },
+    { name: "Деформация", value: 70, color: "bg-secondary" },
+    { name: "Биосовместимость", value: 95, color: "bg-primary" },
+    { name: "Коррозионная стойкость", value: 90, color: "bg-secondary" },
+    { name: "Долговечность", value: 100, color: "bg-primary" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
       <header className="fixed top-0 w-full bg-background/95 backdrop-blur-sm border-b border-border z-50">
@@ -20,9 +66,12 @@ const Index = () => {
             <a href="#home" className="text-sm font-medium hover:text-primary transition-colors">Главная</a>
             <a href="#products" className="text-sm font-medium hover:text-primary transition-colors">Продукция</a>
             <a href="#technology" className="text-sm font-medium hover:text-primary transition-colors">Технологии</a>
+            <a href="#gallery" className="text-sm font-medium hover:text-primary transition-colors">Галерея</a>
             <a href="#about" className="text-sm font-medium hover:text-primary transition-colors">О компании</a>
           </nav>
-          <Button className="hidden md:flex">Связаться</Button>
+          <Button className="hidden md:flex" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
+            Связаться
+          </Button>
         </div>
       </header>
 
@@ -40,13 +89,13 @@ const Index = () => {
                 ООО «МИЦ «МЕДСПЛАВ» — ведущий российский производитель высокотехнологичных изделий из сплавов с эффектом памяти формы (NiTi) для промышленности и медицины
               </p>
               <div className="flex flex-wrap gap-4">
-                <Button size="lg" className="group">
+                <Button size="lg" className="group" onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}>
                   Наша продукция
                   <Icon name="ArrowRight" className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
                 </Button>
-                <Button size="lg" variant="outline">
-                  <Icon name="PlayCircle" className="mr-2" size={20} />
-                  Смотреть видео
+                <Button size="lg" variant="outline" onClick={() => document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' })}>
+                  <Icon name="Image" className="mr-2" size={20} />
+                  Смотреть галерею
                 </Button>
               </div>
             </div>
@@ -238,7 +287,30 @@ const Index = () => {
               </div>
             </div>
 
-            <div className="animate-scale-in relative">
+            <div className="animate-scale-in">
+              <Card className="p-8 mb-6">
+                <h3 className="text-2xl font-bold mb-6 text-center">Характеристики NiTi-сплава</h3>
+                <div className="space-y-4">
+                  {properties.map((prop, index) => (
+                    <div key={index} className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="font-medium">{prop.name}</span>
+                        <span className="text-muted-foreground">{prop.value}%</span>
+                      </div>
+                      <div className="h-3 bg-muted rounded-full overflow-hidden">
+                        <div
+                          className={`h-full ${prop.color} transition-all duration-1000 ease-out rounded-full`}
+                          style={{ 
+                            width: `${prop.value}%`,
+                            animation: `expandWidth 1.5s ease-out ${index * 0.1}s backwards`
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+
               <div className="grid grid-cols-2 gap-6">
                 <Card className="p-6 text-center hover:shadow-lg transition-shadow">
                   <div className="text-4xl font-bold text-primary mb-2">-200°C</div>
@@ -250,48 +322,180 @@ const Index = () => {
                   <div className="text-sm text-muted-foreground">деформация</div>
                   <div className="text-xs mt-2">Сверхэластичность</div>
                 </Card>
-                <Card className="p-6 text-center hover:shadow-lg transition-shadow">
-                  <div className="text-4xl font-bold text-primary mb-2">55.5%</div>
-                  <div className="text-sm text-muted-foreground">Ni / 44.5% Ti</div>
-                  <div className="text-xs mt-2">Состав сплава</div>
-                </Card>
-                <Card className="p-6 text-center hover:shadow-lg transition-shadow">
-                  <div className="text-4xl font-bold text-secondary mb-2">∞</div>
-                  <div className="text-sm text-muted-foreground">циклов</div>
-                  <div className="text-xs mt-2">Долговечность</div>
-                </Card>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-              <Card className="mt-6 p-6 bg-gradient-to-br from-primary/10 to-secondary/10">
-                <h4 className="font-semibold mb-4">Области применения:</h4>
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <div className="flex items-center gap-2">
-                    <Icon name="Check" className="text-primary" size={16} />
-                    <span>Медицина</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Icon name="Check" className="text-primary" size={16} />
-                    <span>Авиакосмос</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Icon name="Check" className="text-primary" size={16} />
-                    <span>Робототехника</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Icon name="Check" className="text-primary" size={16} />
-                    <span>Автомобили</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Icon name="Check" className="text-primary" size={16} />
-                    <span>Энергетика</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Icon name="Check" className="text-primary" size={16} />
-                    <span>Электроника</span>
+      <section id="gallery" className="py-20 px-4 bg-muted/50">
+        <div className="container mx-auto">
+          <div className="text-center mb-16 animate-fade-in">
+            <div className="inline-block px-4 py-2 bg-primary/10 rounded-full mb-4">
+              <span className="text-primary font-semibold text-sm">Галерея</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Наши разработки и производство</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Взгляните на наши высокотехнологичные изделия и современное производство
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {galleryImages.map((image, index) => (
+              <Card
+                key={index}
+                className="group overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 animate-fade-in"
+                style={{ animationDelay: `${index * 0.1}s` }}
+                onClick={() => setSelectedImage(image.url)}
+              >
+                <div className="relative h-64 overflow-hidden">
+                  <img
+                    src={image.url}
+                    alt={image.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                    <div className="inline-block px-3 py-1 bg-primary rounded-full text-white text-xs font-semibold mb-2">
+                      {image.category}
+                    </div>
+                    <h3 className="text-white font-bold text-xl">{image.title}</h3>
                   </div>
                 </div>
               </Card>
+            ))}
+          </div>
+
+          {selectedImage && (
+            <div
+              className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 animate-fade-in"
+              onClick={() => setSelectedImage(null)}
+            >
+              <button
+                className="absolute top-4 right-4 text-white hover:text-primary transition-colors"
+                onClick={() => setSelectedImage(null)}
+              >
+                <Icon name="X" size={32} />
+              </button>
+              <img
+                src={selectedImage}
+                alt="Full size"
+                className="max-w-full max-h-full object-contain animate-scale-in"
+                onClick={(e) => e.stopPropagation()}
+              />
             </div>
+          )}
+        </div>
+      </section>
+
+      <section id="contact" className="py-20 px-4">
+        <div className="container mx-auto max-w-4xl">
+          <div className="text-center mb-12 animate-fade-in">
+            <div className="inline-block px-4 py-2 bg-secondary/10 rounded-full mb-4">
+              <span className="text-secondary font-semibold text-sm">Свяжитесь с нами</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Оставьте заявку</h2>
+            <p className="text-lg text-muted-foreground">
+              Заполните форму, и наши специалисты свяжутся с вами в ближайшее время
+            </p>
+          </div>
+
+          <Card className="p-8 animate-scale-in">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Ваше имя *</Label>
+                  <Input
+                    id="name"
+                    required
+                    placeholder="Иван Иванов"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email *</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    required
+                    placeholder="ivan@example.com"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Телефон *</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    required
+                    placeholder="+7 (999) 123-45-67"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="company">Компания</Label>
+                  <Input
+                    id="company"
+                    placeholder="ООО «Название»"
+                    value={formData.company}
+                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="message">Сообщение *</Label>
+                <Textarea
+                  id="message"
+                  required
+                  placeholder="Расскажите о вашем проекте или вопросе..."
+                  rows={5}
+                  value={formData.message}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                />
+              </div>
+
+              <Button type="submit" size="lg" className="w-full group">
+                Отправить заявку
+                <Icon name="Send" className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
+              </Button>
+
+              <p className="text-sm text-muted-foreground text-center">
+                Нажимая кнопку, вы соглашаетесь с политикой обработки персональных данных
+              </p>
+            </form>
+          </Card>
+
+          <div className="grid md:grid-cols-3 gap-6 mt-12">
+            <Card className="p-6 text-center hover:shadow-lg transition-shadow">
+              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Icon name="Mail" className="text-primary" size={24} />
+              </div>
+              <h4 className="font-semibold mb-2">Email</h4>
+              <p className="text-sm text-muted-foreground">info@medsplav.ru</p>
+            </Card>
+
+            <Card className="p-6 text-center hover:shadow-lg transition-shadow">
+              <div className="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Icon name="Phone" className="text-secondary" size={24} />
+              </div>
+              <h4 className="font-semibold mb-2">Телефон</h4>
+              <p className="text-sm text-muted-foreground">+7 (495) 123-45-67</p>
+            </Card>
+
+            <Card className="p-6 text-center hover:shadow-lg transition-shadow">
+              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Icon name="MapPin" className="text-primary" size={24} />
+              </div>
+              <h4 className="font-semibold mb-2">Адрес</h4>
+              <p className="text-sm text-muted-foreground">Москва, Россия</p>
+            </Card>
           </div>
         </div>
       </section>
@@ -337,25 +541,6 @@ const Index = () => {
                 <p className="text-sm text-muted-foreground">Международные стандарты качества</p>
               </Card>
             </div>
-
-            <Card className="p-8 bg-gradient-to-br from-primary to-secondary text-white animate-fade-in">
-              <div className="text-center">
-                <h3 className="text-3xl font-bold mb-4">Свяжитесь с нами</h3>
-                <p className="mb-6 opacity-90">
-                  Готовы обсудить ваш проект? Наши специалисты помогут подобрать оптимальное решение
-                </p>
-                <div className="flex flex-wrap gap-4 justify-center">
-                  <Button size="lg" variant="secondary" className="group">
-                    <Icon name="Mail" className="mr-2" size={20} />
-                    Написать письмо
-                  </Button>
-                  <Button size="lg" variant="outline" className="bg-white/10 text-white border-white hover:bg-white hover:text-primary">
-                    <Icon name="Phone" className="mr-2" size={20} />
-                    Заказать звонок
-                  </Button>
-                </div>
-              </div>
-            </Card>
           </div>
         </div>
       </section>
@@ -389,9 +574,9 @@ const Index = () => {
             <div>
               <h4 className="font-semibold mb-4">Компания</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-primary transition-colors">О нас</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Технологии</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Контакты</a></li>
+                <li><a href="#about" className="hover:text-primary transition-colors">О нас</a></li>
+                <li><a href="#technology" className="hover:text-primary transition-colors">Технологии</a></li>
+                <li><a href="#contact" className="hover:text-primary transition-colors">Контакты</a></li>
               </ul>
             </div>
 
@@ -419,6 +604,17 @@ const Index = () => {
           </div>
         </div>
       </footer>
+
+      <style>{`
+        @keyframes expandWidth {
+          from {
+            width: 0;
+          }
+          to {
+            width: var(--final-width);
+          }
+        }
+      `}</style>
     </div>
   );
 };
