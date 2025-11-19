@@ -3,11 +3,13 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import Icon from "@/components/ui/icon";
 import { useState } from "react";
 
 const Index = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -15,6 +17,13 @@ const Index = () => {
     company: "",
     message: ""
   });
+
+  const scrollToSection = (id: string) => {
+    setMobileMenuOpen(false);
+    setTimeout(() => {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
 
   const galleryImages = [
     {
@@ -72,6 +81,92 @@ const Index = () => {
           <Button className="hidden md:flex" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
             Связаться
           </Button>
+          
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden">
+                <Icon name="Menu" size={24} />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+              <div className="flex flex-col gap-8 mt-8">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
+                    <span className="text-white font-bold text-2xl">М</span>
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold">МИЦ «МЕДСПЛАВ»</h2>
+                    <p className="text-xs text-muted-foreground">Инновации в материалах</p>
+                  </div>
+                </div>
+                
+                <nav className="flex flex-col gap-4">
+                  <button
+                    onClick={() => scrollToSection('home')}
+                    className="flex items-center gap-3 text-left p-3 rounded-lg hover:bg-muted transition-colors group"
+                  >
+                    <Icon name="Home" className="text-primary" size={20} />
+                    <span className="font-medium group-hover:text-primary transition-colors">Главная</span>
+                  </button>
+                  <button
+                    onClick={() => scrollToSection('products')}
+                    className="flex items-center gap-3 text-left p-3 rounded-lg hover:bg-muted transition-colors group"
+                  >
+                    <Icon name="Package" className="text-primary" size={20} />
+                    <span className="font-medium group-hover:text-primary transition-colors">Продукция</span>
+                  </button>
+                  <button
+                    onClick={() => scrollToSection('technology')}
+                    className="flex items-center gap-3 text-left p-3 rounded-lg hover:bg-muted transition-colors group"
+                  >
+                    <Icon name="Cpu" className="text-primary" size={20} />
+                    <span className="font-medium group-hover:text-primary transition-colors">Технологии</span>
+                  </button>
+                  <button
+                    onClick={() => scrollToSection('gallery')}
+                    className="flex items-center gap-3 text-left p-3 rounded-lg hover:bg-muted transition-colors group"
+                  >
+                    <Icon name="Image" className="text-primary" size={20} />
+                    <span className="font-medium group-hover:text-primary transition-colors">Галерея</span>
+                  </button>
+                  <button
+                    onClick={() => scrollToSection('about')}
+                    className="flex items-center gap-3 text-left p-3 rounded-lg hover:bg-muted transition-colors group"
+                  >
+                    <Icon name="Building2" className="text-primary" size={20} />
+                    <span className="font-medium group-hover:text-primary transition-colors">О компании</span>
+                  </button>
+                </nav>
+                
+                <Button 
+                  size="lg" 
+                  className="w-full group"
+                  onClick={() => scrollToSection('contact')}
+                >
+                  <Icon name="Mail" className="mr-2" size={20} />
+                  Связаться
+                  <Icon name="ArrowRight" className="ml-auto group-hover:translate-x-1 transition-transform" size={20} />
+                </Button>
+                
+                <div className="border-t pt-6 mt-auto">
+                  <div className="space-y-3 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <Icon name="Phone" size={16} className="text-primary" />
+                      <span>+7 (495) 123-45-67</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Icon name="Mail" size={16} className="text-primary" />
+                      <span>info@medsplav.ru</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Icon name="MapPin" size={16} className="text-primary" />
+                      <span>Москва, Россия</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </header>
 
